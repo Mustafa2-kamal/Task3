@@ -1,0 +1,149 @@
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap');
+
+
+.g-2 {
+    --bs-gutter-x: 8rem;
+    --bs-gutter-y: 10rem;
+}
+
+.g-3 {
+    --bs-gutter-x: 5rem;
+    --bs-gutter-y: 0rem;
+}
+
+body{
+    background-color: #fafafa;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+/* start nav */
+.navbar .nav-link.brand h1{
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 0;
+}
+
+
+.navbar .nav-link{
+
+    font-weight: 600;
+  }
+
+
+/* search input */
+.form-control:focus {
+
+    box-shadow: none;
+}
+.form-control::placeholder{
+    color: #858585;
+}
+
+.search{
+    width: 500px;
+}
+
+
+
+/* filter */
+.btn{
+    font-weight: 600;
+}
+
+.dropdown{
+    width: 230px;
+    position:relative;
+}
+
+.dropdown i{
+    position: absolute;
+    left: 87%;
+    top: 35%;
+}
+
+/* .dropdown:hover .dropdown-menu { 
+    
+    display: block;
+} */
+
+.dropShow{
+    display: block;
+}
+
+.card .card-body h2{
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.card{
+    height: 330px;
+}
+
+.card .image{
+    height: 50%;
+    width: 100%;
+}
+.card .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card .card-body .name{
+    font-size: 13px;
+    font-weight: 600;
+
+}
+
+.card .card-body .value{
+    font-size: 13px;
+   
+}
+
+
+
+
+
+/* detail */
+
+.content h2{
+    font-weight: 800;
+    font-size: 25px;
+}
+.content .left_content .name{
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.content .right_content .name{
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.content .left_content .value{
+    
+    font-size: 15px;
+    font-family: 'Nunito Sans';
+}
+
+.content .right_content .value{
+    
+    font-size: 15px;
+}
+
+/* .content .down_content .btn {
+    width: 110px;
+} */
+
+
+/* .......... */
+
+.search_white::placeholder{
+    color: #ffffff;
+}

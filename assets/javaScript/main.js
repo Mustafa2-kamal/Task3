@@ -1,195 +1,171 @@
-let Mode=document.getElementById('mode');
-let elements=document.getElementsByClassName('elemnt');
-let search=document.getElementById('search_input');
-let droplist=document.getElementsByClassName('dropdown-item');
-let filterButton=document.getElementById('filter');
-let dropMenu=document.getElementsByClassName('dropdown-menu');
 
+async function init(){
+    let countries=[];
+    let filter='no filter';
 
+    setMode();
 
-let ModeToggle=1;
-let nameOfCountry='';
-let searchData=[];
-let allCountries=[];
-let data=[];
+    onToggleMode();
 
+    onSearch(async(searchValue,activeRequest)=>{
+        countries=await loadCountries(searchValue,activeRequest);
+        displayCountries(filterCountries(countries,filter));
 
-//filter by
-filterButton.addEventListener('click',()=>{
-dropMenu[0].classList.toggle('dropShow');
-});
+    });
 
-//dropdown 
-for(let j=0;j<droplist.length;j++){
-    droplist[j].addEventListener('click',(e)=>{
-        let region=e.target.text;
-        filterButton.innerHTML=`${region}`;
-        filterData(region);
-    })
+    onFilterChange(filterValue =>{
+        filter=filterValue;
+        let filteredCountries=filterCountries(countries,filterValue);
+        displayCountries(filteredCountries);
+
+    });
+
+    countries=await loadCountries();
+    displayCountries(countries);
+
+}
+
+function setMode(){
+
+    let Mode = localStorage.getItem('Mode');
+
+    if (Mode === 'dark') {
+        toggleMode(Mode);
+    }
+}
+
+function toggleMode(mode){
+    localStorage.setItem('Mode',mode);
+
+    document.body.classList.toggle('dark-theme');
+   
+    let elements=document.getElementsByClassName('elemnt');
+
+    for(let i=0;i<elements.length;i++){
+        elements[i].classList.toggle('dark-theme'); 
+    }
+
 }
 
 //Mode dark or light
-Mode.addEventListener('click',()=>{
+function onToggleMode(){
 
-    if (ModeToggle == 1) {//dark
-        darkMode();
-        ModeToggle = 0;
+    let modeToggle=document.getElementById('mode');
+    modeToggle.addEventListener('click',()=>{
+
+    let Mode=localStorage.getItem('Mode');
+    if (Mode ==='dark') {//dark
+        toggleMode('light');
+        modeToggle.innerHTML="<i class='fa-regular fa-moon'></i> Dark Mode";
     }
     else {//light
-        lightMode();
-        ModeToggle = 1;
+        toggleMode('dark');
+        modeToggle.innerHTML="<i class='fa-regular fa-sun'></i> Light Mode";
     }
 
-});
+})
+}
 
-//search input
-search.addEventListener('keyup',function(){
-    nameOfCountry=search.value;
-    searchByName(nameOfCountry);
-});
+function filterCountries(countries,filterValue){
 
-
-//filter by region
-function filterData(region){
-
-    if (region.toLowerCase() == 'no filter') {
-
-        if (search.value == '') {
-            display_Data(allCountries);
-        }
-        else {
-            display_Data(searchData);
-        }
+    if (filterValue.toLowerCase() === 'no filter') {
+        return countries;
     }
-
     else {
-        if (search.value == '') {
-            data = allCountries.filter((country) => {
-                if (country.region == region) {
-                    return country;
-                }
+        if (countries.length != 0) {
+            let filteredCountries = countries.filter(country => {
+                return country.region === filterValue
             })
+
+            return filteredCountries;
         }
         else {
-            data = searchData.filter((country) => {
-                if (country.region == region) {
-                    return country;
-                }
-            })
-        }
-        display_Data(data);
-    }
-}
-
-
-function darkMode(){
-
-    document.body.style.backgroundColor="#202c37";
-    
-    for(let i=0;i<elements.length;i++){
-        elements[i].style.cssText="background-color:#2b3945 !important;color:#ffffff !important;";    
-    }
-    
-    search.classList.add('search_white');
-
-    for(let i=0;i<droplist.length;i++){
-        droplist[i].style.cssText="color:#ffffff !important;";    
-    }
-
-    Mode.innerHTML="<i class='fa-regular fa-sun'></i> Light Mode";
-
-    localStorage.setItem("Mode","Dark");
-}
-
-
-function lightMode(){
-
-    document.body.style.backgroundColor="#ffffff";
-    
-    for(let i=0;i<elements.length;i++){
-        elements[i].style.cssText="background-color:#ffffff !important;color:#000000 !important;";    
-    }
-    
-    search.classList.remove('search_white');
-
-    for(let i=0;i<droplist.length;i++){
-        droplist[i].style.cssText="color:#000000 !important;";    
-    }
-    Mode.innerHTML="<i class='fa-regular fa-moon'></i> Dark Mode";
-
-    localStorage.setItem("Mode","Light");
-}
-
-
-
-//search 
-async function searchByName(name){
-
-
-    if (name == '') {
-        displayAll();
-    }
-
-    else {
-
-        let contries = await fetch(`https://restcountries.com/v3.1/name/${name}`);
-        searchData = await contries.json();
-
-        if (searchData.status != 404) {
-            display_Data(searchData);
-        }
-
-        else {
-            if (ModeToggle == 0) {
-                document.getElementById('rowFlags').innerHTML = "<p class='text-white'>No results Found</p>";
-            }
-            else {
-                document.getElementById('rowFlags').innerHTML = "<p class='text-black'>No results Found</p>";
-            }
+            return '';
         }
     }
+}
+
+function onFilterChange(callBack){
+    let dropMenu=document.getElementsByClassName('dropdown-menu');
+    dropMenu[0].addEventListener('click',(e)=>{
+      callBack(e.target.text);
+    })
+}
+
+function onSearch(callBack){
+    let activeRequest=0;
+    let search=document.getElementById('search_input');
+    search.addEventListener('keyup',
+    debounce(()=>callBack(search.value,activeRequest++)))
+}
+
+async function loadCountries(name,activeRequest){
+    let countries='';
+
+
+
+    if(name){
+        let currentReq=activeRequest;
+        countries=await fetch(`https://restcountries.com/v3.1/name/${name}`);
+        if(currentReq===activeRequest){
+            countries=await countries.json();
+            return countries;
+        }
+    
+    }
+    else{
+        countries=await fetch('https://restcountries.com/v3.1/all');
+    }
+
+    countries=await countries.json();
+
+    if(countries.status == 404){
+        return '';
+    }
+    else return countries;
 
 }
 
 
-//display all countries fetch by api
-async function displayAll() {
-    let contries = await fetch("https://restcountries.com/v3.1/all");
-    allCountries = await contries.json();
-    display_Data(allCountries);
-}
+function debounce(func, delay = 1000) {
+    let timeoutId;
+  
+    return function () {
+      clearTimeout(timeoutId);
+  
+      timeoutId = setTimeout(() => {
+        func();
+      }, delay);
+    };
+  }
 
-
-//to display data
-function display_Data(country) {
+function displayCountries(countries){
 
     let flags = '';
-    let ci=0;
-    if(country.length!=0){
-        for (let i = 0; i < country.length; i++) {
-            formatNumber=Number(country[i].population);
-            
+
+    if (countries.length != 0) {
+        for (let i = 0; i < countries.length; i++) {
             flags += `
         <div class="col-12 col-sm-8 col-xxl-3 col-xl-4 col-md-6 col-lg-4">
-            <a href="./detail.html" class="text-black text-decoration-none ">
+            <a href="./detail.html?countryCode=${countries[i].cca2}" class="text-black text-decoration-none ">
                 <div class="card border-0 shadow-sm elemnt">
                     <div class="image shadow-sm">
-                        <img src="${country[i].flags.svg}" class="card-img-top" alt="${country[i].flags.alt}">
+                        <img src="${countries[i].flags.svg}" class="card-img-top" alt="${countries[i].flags.alt}">
                     </div>
                     <div class="card-body mt-2 ms-2">
-                        <h2>${country[i].name.common}</h2>
+                        <h2>${countries[i].name.common}</h2>
                         <div>
                             <span class="name">Population:</span>
-                            <span class="value">${formatNumber.toLocaleString('en-US')}</span>
+                            <span class="value">${countries[i].population.toLocaleString('en-US')}</span>
                         </div>
                         <div>
                             <span class="name">Region:</span>
-                            <span class="value">${country[i].region}</span>
+                            <span class="value">${countries[i].region}</span>
                         </div>
 
                         <div>
                             <span class="name">Capital:</span>
-                            <span class="value">${country[i].capital}</span>
+                            <span class="value">${countries[i].capital}</span>
                         </div>
                     </div>
                 </div>
@@ -200,21 +176,12 @@ function display_Data(country) {
         }
 
         document.getElementById('rowFlags').innerHTML = flags;
-        if (ModeToggle == 0) {
-            darkMode();
-        }
     }
 
-    else {
-        if (ModeToggle == 0) {
-            document.getElementById('rowFlags').innerHTML = "<p class='text-white'>No results Found</p>";
-        }
-        else {
-            document.getElementById('rowFlags').innerHTML = "<p class='text-black'>No results Found</p>";
-        }
+    else{
+        document.getElementById('rowFlags').innerHTML = "<p class='elemnt'>No Results Found</p>";
     }
-
 }
 
 
-displayAll();
+init();

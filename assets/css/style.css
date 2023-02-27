@@ -2,10 +2,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap');
 
 
+:root {
+    --bg-color-element: #ffffff;
+    --bg-color-body:#fafafa;
+}
+
+.dark-theme {
+    --bg-color-element: #2b3945;
+    --bg-color-body:#202c37;
+    --font-color: #ffffff;
+}
+
 .g-2 {
     --bs-gutter-x: 8rem;
     --bs-gutter-y: 10rem;
 }
+
 
 .g-3 {
     --bs-gutter-x: 5rem;
@@ -13,7 +25,7 @@
 }
 
 body{
-    background-color: #fafafa;
+    background-color: var(--bg-color-body);
     font-family: 'Nunito Sans', sans-serif;
 }
 
@@ -23,6 +35,11 @@ body{
 }
 
 /* start nav */
+
+.navbar{
+    background-color: var(--bg-color-element);
+    color: var(--font-color);
+}
 .navbar .nav-link.brand h1{
   font-size: 20px;
   font-weight: 800;
@@ -37,12 +54,36 @@ body{
 
 
 /* search input */
+
+.search{
+    background-color: var(--bg-color-element);
+    color: var(--font-color);
+}
+
+
+.form-control{
+    background-color: var(--bg-color-element);
+    color: var(--font-color);
+    
+}
+
 .form-control:focus {
 
     box-shadow: none;
+    background-color: var(--bg-color-element);
+    color: var(--font-color);
 }
+
+
+.search:focus-within{
+
+    outline:  0.25rem solid rgb(13 110 253 / 25%);
+
+    
+}
+
 .form-control::placeholder{
-    color: #858585;
+    color: var(--font-color);
 }
 
 .search{
@@ -52,28 +93,32 @@ body{
 
 
 /* filter */
-.btn{
+ .btn{
     font-weight: 600;
 }
 
+#filter{
+    background-color: var(--bg-color-element); 
+    color: var(--font-color); 
+}
+
+
 .dropdown{
     width: 230px;
-    position:relative;
+
 }
 
-.dropdown i{
-    position: absolute;
-    left: 87%;
-    top: 35%;
+.dropdown-menu{
+    background-color: var(--bg-color-element);
+   
 }
 
-/* .dropdown:hover .dropdown-menu { 
-    
-    display: block;
-} */
+.dropdown-menu .dropdown-item{
+    color: var(--font-color);
+}
 
-.dropShow{
-    display: block;
+.dropdown-menu .dropdown-item:hover{
+background-color: #b6b2b2;
 }
 
 .card .card-body h2{
@@ -83,6 +128,9 @@ body{
 
 .card{
     height: 330px;
+
+    background-color: var(--bg-color-element);
+    color: var(--font-color);
 }
 
 .card .image{
@@ -107,10 +155,23 @@ body{
 }
 
 
+p{
+    color: var(--font-color);
+}
+
 
 
 
 /* detail */
+
+#backBtn{
+    background-color: var(--bg-color-element);
+    color: var(--font-color);
+}
+
+.content{
+    color: var(--font-color);
+}
 
 .content h2{
     font-weight: 800;
@@ -136,10 +197,6 @@ body{
     
     font-size: 15px;
 }
-
-/* .content .down_content .btn {
-    width: 110px;
-} */
 
 
 /* .......... */

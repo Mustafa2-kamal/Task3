@@ -87,7 +87,10 @@ function filterCountries(countries,filterValue){
 
 function onFilterChange(callBack){
     let dropMenu=document.getElementsByClassName('dropdown-menu');
+    let valueSelected=document.getElementById('valueSelected');
+    
     dropMenu[0].addEventListener('click',(e)=>{
+      valueSelected.innerHTML=e.target.text;
       callBack(e.target.text);
     })
 }

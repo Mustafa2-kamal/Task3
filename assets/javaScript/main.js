@@ -11,6 +11,9 @@ async function init(){
 
     try {
         FavouriteCountries= JSON.parse(localStorage.getItem('Favourite Countries'));
+        if(FavouriteCountries===null){
+        FavouriteCountries=[];
+        }
     }
     catch {
         FavouriteCountries=[];
@@ -53,6 +56,8 @@ async function init(){
         }
 
     });
+
+    console.log(FavouriteCountries);
 
     displayFavourites(FavouriteCountries);
 

@@ -4,7 +4,6 @@ let favouriteList=[];
 
 
 function drop(){
-    favouriteList=JSON.parse(localStorage.getItem('Favourite Countries'));
 
     const draggable = document.querySelector('.dragging');
 

@@ -3,29 +3,41 @@
 
 
 :root {
-    --bg-color-element: #ffffff;
-    --bg-color-body:#fafafa;
+
+    --bs-body-color: #111517;
+    --bs-body-bg: #fafafa;
+
+    --bs-element-bg-color:#fff;
+    --bs-element-font-color: #111517;
+
+    --bs-star-color:#e7eaec;
+
+    --bs-border-color :#fff ;
+
 }
 
 .dark-theme {
-    --bg-color-element: #2b3945;
-    --bg-color-body:#202c37;
-    --font-color: #ffffff;
+  
+    --bs-body-color: #fff;
+    --bs-body-bg: #202c37;
+
+    --bs-element-bg-color:#2b3945;
+    --bs-element-font-color: #fff;
+
 }
 
-.g-2 {
-    --bs-gutter-x: 8rem;
-    --bs-gutter-y: 10rem;
+.star-color{
+    --bs-star-color:#FF5733;
 }
 
+.drag-over {
+    
+    --bs-border-color : #27ae60;
 
-.g-3 {
-    --bs-gutter-x: 5rem;
-    --bs-gutter-y: 0rem;
 }
+
 
 body{
-    background-color: var(--bg-color-body);
     font-family: 'Nunito Sans', sans-serif;
 }
 
@@ -36,10 +48,10 @@ body{
 
 /* start nav */
 
-.navbar{
-    background-color: var(--bg-color-element);
-    color: var(--font-color);
+.navbar {
+    background-color: var(--bs-element-bg-color);
 }
+
 .navbar .nav-link.brand h1{
   font-size: 20px;
   font-weight: 800;
@@ -56,34 +68,32 @@ body{
 /* search input */
 
 .search{
-    background-color: var(--bg-color-element);
-    color: var(--font-color);
+    background-color: var(--bs-element-bg-color);
+    color: var(--bs-element-font-color);
 }
 
 
 .form-control{
-    background-color: var(--bg-color-element);
-    color: var(--font-color);
+    background-color: var(--bs-element-bg-color);
+    color: var(--bs-element-font-color);
     
 }
 
 .form-control:focus {
 
     box-shadow: none;
-    background-color: var(--bg-color-element);
-    color: var(--font-color);
+    background-color: var(--bs-element-bg-color);
+    color: var(--bs-element-font-color);
 }
 
 
 .search:focus-within{
 
     outline:  0.25rem solid rgb(13 110 253 / 25%);
-
-    
 }
 
 .form-control::placeholder{
-    color: var(--font-color);
+    color: var(--bs-element-font-color);
 }
 
 .search{
@@ -93,14 +103,16 @@ body{
 
 
 /* filter */
- .btn{
+.btn{
     font-weight: 600;
+    background-color: var(--bs-element-bg-color);
+    color: var(--bs-element-font-color);
 }
 
-#filter{
+/* #filter{
     background-color: var(--bg-color-element); 
     color: var(--font-color); 
-}
+} */
 
 
 .dropdown{
@@ -109,12 +121,12 @@ body{
 }
 
 .dropdown-menu{
-    background-color: var(--bg-color-element);
+    background-color: var(--bs-element-bg-color);
    
 }
 
 .dropdown-menu .dropdown-item{
-    color: var(--font-color);
+    color: var(--bs-element-font-color);
 }
 
 .dropdown-menu .dropdown-item:hover{
@@ -127,14 +139,13 @@ background-color: #b6b2b2;
 }
 
 .card{
-    height: 330px;
-
-    background-color: var(--bg-color-element);
-    color: var(--font-color);
+    height: 315px;
+    background-color: var(--bs-element-bg-color);
+    color: var(--bs-element-font-color);
 }
 
 .card .image{
-    height: 50%;
+    height: 150px;
     width: 100%;
 }
 .card .image img {
@@ -143,7 +154,12 @@ background-color: #b6b2b2;
     object-fit: cover;
 }
 
-.card .card-body .name{
+.card .card-body{
+padding: 15px 10px 12px 20px;
+}
+
+
+ .name{
     font-size: 13px;
     font-weight: 600;
 
@@ -155,22 +171,69 @@ background-color: #b6b2b2;
 }
 
 
-p{
-    color: var(--font-color);
+.card .FavouriteBtn{
+ color: var(--bs-star-color);
+
 }
 
 
+p{
+    color: var(--bs-element-font-color);
+}
+
+
+
+.favourites{
+
+height: 550px;
+
+background-color: var(--bs-element-bg-color);
+}
+
+.favourites h2{
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.favourites .list{
+    height: 500px;
+    border: 2px solid var(--bs-border-color);
+}
+
+.favourites .list h2{
+    font-size: 14px;
+}
+
+
+
+.drag {
+    opacity: 0.5;
+}
+
+.imageDrop img {
+    width: 50px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid black;
+    object-fit: cover;
+}
+
+
+#rowFlags {
+    width: 1000px;
+    height: 550px;
+}
 
 
 /* detail */
 
-#backBtn{
-    background-color: var(--bg-color-element);
-    color: var(--font-color);
-}
+/* #backBtn{
+     background-color: var(--bg-color-element);
+    color: var(--font-color); 
+} */
 
 .content{
-    color: var(--font-color);
+    color: var(--bs-element-font-color);
 }
 
 .content h2{

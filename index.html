@@ -21,7 +21,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg pt-4 pb-4 shadow-sm elemnt">
+    <nav class="navbar navbar-expand-lg pt-4 pb-4 shadow-sm">
         <div class="container">
             <a class="nav-link brand" href="#">
                 <h1>Where in the world?</h1>
@@ -38,23 +38,24 @@
         <div class="container">
             <div class="d-flex flex-wrap flex-xl-nowrap justify-content-between">
 
-                <div class="search shadow-sm d-flex align-items-center ps-4 rounded-2 elemnt">
+                <div class="search shadow-sm d-flex align-items-center ps-4 rounded-2">
                     <label for="search_input">
                     <i class="fa-solid fa-magnifying-glass elemnt"></i>
                     </label>
-                    <input class="form-control p-3 border-0 elemnt" id="search_input" type="search" placeholder="Search for a country...">
+                    <input class="form-control p-3 border-0" id="search_input" type="search" placeholder="Search for a country...">
                 </div>
 
                 <div class="dropdown">
-                    <button class="btn border-0 p-3 shadow-sm mt-5 mt-lg-0 w-100 text-start elemnt" type="button" data-bs-toggle="dropdown" id='filter' type="button">
+                    <button class="btn border-0 p-3 shadow-sm mt-5 mt-lg-0 w-100 text-start" type="button" data-bs-toggle="dropdown" id='filter' type="button">
                         <div class="d-flex justify-content-between align-items-center">
-                        <span id="valueSelected">Filter by Region</span> 
+                        <span id="valueSelected">Filter by</span> 
                         <i class="fa-solid fa-angle-down elemnt"></i>
                         </div>
                     </button>
                     
-                    <ul class="dropdown-menu mt-1 border-0 shadow-sm w-100 elemnt">
+                    <ul class="dropdown-menu mt-1 border-0 shadow-sm w-100">
                         <li><a class="dropdown-item" href="#">No Filter</a></li>
+                        <li><a class="dropdown-item" href="#">Favourites</a></li>
                         <li><a class="dropdown-item" href="#">Africa</a></li>
                         <li><a class="dropdown-item" href="#">Americas</a></li>
                         <li><a class="dropdown-item" href="#">Asia</a></li>
@@ -69,12 +70,18 @@
     </section>
 
     <section class="mt-5 pb-5">
-        <div class="container">
-            <div id='rowFlags' class="row g-5">
+        <div class="container d-flex justify-content-between overflow-hidden">
+
+            <div id="favouriteList" class='favourites w-25 p-3 shadow-sm d-md-block d-none'>
+                <h2>Favourites</h2>
+                <div id="FavList" class="list mt-2 overflow-auto">
+                 
+                </div>
+ 
+            </div>
+
+            <div id='rowFlags' class="row w-100 overflow-auto  align-items-center g-5 ms-1 pe-4 ps-3">
                 
-
-
-
             </div>
         </div>
     </section>
@@ -84,8 +91,12 @@
     <!-- bootstrap javascript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
  
-    
-    <script src="./assets/javaScript/main.js"></script>
+
+    <script src="./assets/javaScript/Theme.js"></script>
+    <script src="./assets/javaScript/main.js" type="module"></script>
+    <script src="./assets/javaScript/api.js" type="module"></script>
+    <script src="./assets/javaScript/favourite.js" type="module"></script>
+
 </body>
 
 </html>

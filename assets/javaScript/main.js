@@ -1,88 +1,74 @@
 
+import { loadCountries } from "./api.js";
+import { drop,displayFavourites,onFavouriteChange} from "./favourite.js";
+
+
 async function init(){
     let countries=[];
     let filter='no filter';
 
-    setMode();
+    let FavouriteCountries=[];
 
-    onToggleMode();
+    try {
+        FavouriteCountries= JSON.parse(localStorage.getItem('Favourite Countries'));
+    }
+    catch {
+        FavouriteCountries=[];
+    }
 
-    onSearch(async(searchValue,activeRequest)=>{
-        countries=await loadCountries(searchValue,activeRequest);
+
+    onSearch(async(searchValue)=>{
+        countries=await loadCountries(searchValue);
         displayCountries(filterCountries(countries,filter));
 
     });
 
     onFilterChange(filterValue =>{
         filter=filterValue;
-        let filteredCountries=filterCountries(countries,filterValue);
-        displayCountries(filteredCountries);
+        displayCountries(filterCountries(countries,filterValue));
 
     });
 
     countries=await loadCountries();
     displayCountries(countries);
 
+
+    onFavouriteChange((FavouriteList)=>{
+        try {
+            localStorage.setItem('Favourite Countries', JSON.stringify(FavouriteList));
+        }
+        catch {
+            // handle error, usually to keep it in memory (variable)
+        }
+
+    });
+
+    onDrag((favourites)=>{
+        try {
+            FavouriteCountries=favourites;
+            localStorage.setItem('Favourite Countries', JSON.stringify(FavouriteCountries));
+        }
+        catch {
+            // handle error, usually to keep it in memory (variable)
+        }
+
+    });
+
+    displayFavourites(FavouriteCountries);
+
 }
 
-function setMode(){
-
-    let Mode = localStorage.getItem('Mode');
-
-    if (Mode === 'dark') {
-        toggleMode(Mode);
-    }
-}
-
-function toggleMode(mode){
-    localStorage.setItem('Mode',mode);
-
-    document.body.classList.toggle('dark-theme');
-   
-    let elements=document.getElementsByClassName('elemnt');
-
-    for(let i=0;i<elements.length;i++){
-        elements[i].classList.toggle('dark-theme'); 
-    }
-
-}
-
-//Mode dark or light
-function onToggleMode(){
-
-    let modeToggle=document.getElementById('mode');
-    modeToggle.addEventListener('click',()=>{
-
-    let Mode=localStorage.getItem('Mode');
-    if (Mode ==='dark') {//dark
-        toggleMode('light');
-        modeToggle.innerHTML="<i class='fa-regular fa-moon'></i> Dark Mode";
-    }
-    else {//light
-        toggleMode('dark');
-        modeToggle.innerHTML="<i class='fa-regular fa-sun'></i> Light Mode";
-    }
-
-})
-}
 
 function filterCountries(countries,filterValue){
 
     if (filterValue.toLowerCase() === 'no filter') {
-        return countries;
+        return [...countries];
     }
-    else {
-        if (countries.length != 0) {
-            let filteredCountries = countries.filter(country => {
-                return country.region === filterValue
-            })
 
-            return filteredCountries;
-        }
-        else {
-            return '';
-        }
-    }
+    return countries.filter(country => {
+        return country.region === filterValue
+    })
+    
 }
 
 function onFilterChange(callBack){
@@ -96,94 +82,127 @@ function onFilterChange(callBack){
 }
 
 function onSearch(callBack){
-    let activeRequest=0;
     let search=document.getElementById('search_input');
     search.addEventListener('keyup',
-    debounce(()=>callBack(search.value,activeRequest++)))
-}
-
-async function loadCountries(name,activeRequest){
-    let countries='';
-
-
-
-    if(name){
-        let currentReq=activeRequest;
-        countries=await fetch(`https://restcountries.com/v3.1/name/${name}`);
-        if(currentReq===activeRequest){
-            countries=await countries.json();
-            return countries;
-        }
-    
-    }
-    else{
-        countries=await fetch('https://restcountries.com/v3.1/all');
-    }
-
-    countries=await countries.json();
-
-    if(countries.status == 404){
-        return '';
-    }
-    else return countries;
-
+    debounce(()=>callBack(search.value)))
 }
 
 
-function debounce(func, delay = 1000) {
-    let timeoutId;
+function debounce(func, delay = 300) {
+    let timerId;
   
     return function () {
-      clearTimeout(timeoutId);
+      clearTimeout(timerId);
   
-      timeoutId = setTimeout(() => {
+      timerId = setTimeout(() => {
         func();
       }, delay);
     };
   }
 
+
+
+function onDrag(callBack){
+
+    const draggables = document.querySelectorAll('.draggable');
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => {
+            draggable.classList.add('dragging');
+            draggable.classList.add('drag');
+        })
+
+        draggable.addEventListener('dragend', () => {
+           draggable.classList.remove('dragging');
+            draggable.classList.remove("drag")
+        })
+    })
+
+
+    let favouriteList = document.getElementById('favouriteList');
+
+    favouriteList.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        favouriteList.classList.add('drag-over');
+    });
+
+    favouriteList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        favouriteList.classList.add('drag-over');
+    });
+
+    favouriteList.addEventListener('dragleave', (e) => {
+        favouriteList.classList.remove('drag-over');
+    });
+
+    favouriteList.addEventListener('drop', (e) => {
+        e.preventDefault();
+        favouriteList.classList.remove('drag-over');
+
+        let list = drop();
+        callBack(list);
+
+   });
+
+   
+
+}
+
 function displayCountries(countries){
 
     let flags = '';
 
-    if (countries.length != 0) {
-        for (let i = 0; i < countries.length; i++) {
-            flags += `
-        <div class="col-12 col-sm-8 col-xxl-3 col-xl-4 col-md-6 col-lg-4">
-            <a href="./detail.html?countryCode=${countries[i].cca2}" class="text-black text-decoration-none ">
-                <div class="card border-0 shadow-sm elemnt">
-                    <div class="image shadow-sm">
-                        <img src="${countries[i].flags.svg}" class="card-img-top" alt="${countries[i].flags.alt}">
-                    </div>
-                    <div class="card-body mt-2 ms-2">
-                        <h2>${countries[i].name.common}</h2>
-                        <div>
-                            <span class="name">Population:</span>
-                            <span class="value">${countries[i].population.toLocaleString('en-US')}</span>
-                        </div>
-                        <div>
-                            <span class="name">Region:</span>
-                            <span class="value">${countries[i].region}</span>
-                        </div>
 
-                        <div>
-                            <span class="name">Capital:</span>
-                            <span class="value">${countries[i].capital}</span>
-                        </div>
+    if(countries.length == 0){
+        document.getElementById('rowFlags').innerHTML = "<p>No Results Found</p>";
+        return
+    }
+
+    for (let country of countries) {
+        flags += `
+        <div class="col-12 col-sm-8 col-xxl-3 col-xl-4 col-md-6 col-lg-4 ">
+
+        <div class="card border-0 shadow-sm draggable" draggable="true">
+    
+            <a href="./detail.html?countryCode=${country.cca2}" class="text-black text-decoration-none ">
+                <div class="image shadow-sm">
+                    <img src="${country.flags.svg}" class="card-img-top" alt="${country.flags.alt}">
+                </div>
+                <div class="card-body mt-2 ">
+                    <h2>${country.name.common}</h2>
+                    <div>
+                        <span class="name">Population:</span>
+                        <span class="value">${country.population.toLocaleString('en-US')}</span>
                     </div>
+                    <div>
+                        <span class="name">Region:</span>
+                        <span class="value">${country.region}</span>
+                    </div>
+    
+                    <div>
+                        <span class="name">Capital:</span>
+                        <span class="value">${country.capital}</span>
+                    </div>
+    
                 </div>
             </a>
+            <div class="text-end d-md-none">
+                <Button flag="${country.flags.svg}" country-name="${country.name.common}" class="FavouriteBtn bg-white border-0 me-2 mb-2 ">
+                    <i class="fa-solid fa-star"></i>
+                </Button>
+            </div>
+    
         </div>
+    
+    
+    </div>        
+
         `;
 
-        }
-
-        document.getElementById('rowFlags').innerHTML = flags;
     }
 
-    else{
-        document.getElementById('rowFlags').innerHTML = "<p class='elemnt'>No Results Found</p>";
-    }
+    document.getElementById('rowFlags').innerHTML = flags;
+
 }
 
 
